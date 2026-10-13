@@ -1,0 +1,53 @@
+run_id: rupture_multiview_quick_v1
+seed: 2026
+
+paths:
+  train: data/raw/train.csv
+  manifest: artifacts/validation/pair_grouped_folds.csv
+  audit: artifacts/validation/pair_grouped_audit.json
+  baseline_oof: artifacts/runs/multimodal_lgbm_extratrees_v1/oof_predictions.csv
+  feature_cache_config: configs/prr_oof.yaml
+  feature_cache_dir: artifacts/runs/prr_oof_5fold_v1/feature_cache
+  run_dir: artifacts/runs/rupture_multiview_quick_v1
+  output_dir: outputs/rupture_benchmark_quick
+
+training:
+  selection_epochs: 2
+  refit_epochs: 2
+
+model:
+  seed: 2026
+  device: auto
+  max_atoms: 64
+  node_dim: 32
+  gnn_layers: 2
+  identity_dim: 24
+  pair_dim: 48
+  target_dim: 32
+  dropout: 0.10
+  pretrain_epochs: 1
+  pretrain_learning_rate: 0.001
+  learning_rate: 0.002
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  molecule_batch_size: 128
+  pair_batch_size: 512
+  mask_rate: 0.15
+  positive_weight_max: 5.0
+  binary_weight: 1.0
+  prr_raw_weight: 0.8
+  prr_log_weight: 0.4
+  severity_weight: 0.25
+
+gbdt:
+  n_estimators: 40
+  learning_rate: 0.05
+  num_leaves: 15
+  min_child_samples: 25
+  reg_lambda: 2.0
+  target_n_jobs: 8
+
+stacking:
+  threshold_min: 0.05
+  threshold_max: 0.75
+  threshold_steps: 71

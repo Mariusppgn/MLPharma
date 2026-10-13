@@ -1,0 +1,6 @@
+run_dir: artifacts/runs/nested_cpu_optimization_v1
+cpu_threads: 4
+train: data/raw/train.csv
+manifest: artifacts/validation/pair_grouped_folds.csv
+prr_config: configs/prr_nested_hpo.yaml
+classification_config: configs/classification_nested_hpo.yaml

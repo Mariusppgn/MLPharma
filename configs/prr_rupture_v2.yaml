@@ -1,0 +1,64 @@
+run_id: prr_rupture_v2_oof
+seed: 2026
+
+paths:
+  train: data/raw/train.csv
+  manifest: artifacts/validation/pair_grouped_folds.csv
+  audit: artifacts/validation/pair_grouped_audit.json
+  incumbent_oof: outputs/prr_oof/oof_predictions_blend_prior_base.csv
+  feature_cache_config: configs/prr_oof.yaml
+  feature_cache_dir: artifacts/runs/prr_oof_5fold_v1/feature_cache
+  run_dir: artifacts/runs/prr_rupture_v2_oof
+  output_dir: outputs/prr_rupture_v2
+
+training:
+  device: auto
+
+residual:
+  hidden_dims: [256, 128]
+  dropout: 0.15
+  epochs: 18
+  mse_epochs: 5
+  batch_size: 256
+  learning_rate: 0.0008
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  huber_beta: 0.5
+  log_aux_weight: 0.10
+
+gbdt:
+  top_k: 15
+  minimum_positive: 50
+  n_estimators: 260
+  learning_rate: 0.03
+  num_leaves: 31
+  min_child_samples: 24
+  reg_lambda: 3.0
+  target_n_jobs: 6
+
+knn:
+  neighbors: 40
+  temperature: 0.12
+  prior_strength: 0.35
+  dimensions: 128
+  n_jobs: 6
+
+factorization:
+  identity_dim: 48
+  rank: 96
+  dropout: 0.20
+  identity_mask_rate: 0.35
+  epochs: 18
+  mse_epochs: 5
+  batch_size: 256
+  learning_rate: 0.0008
+  weight_decay: 0.0002
+  gradient_clip_norm: 1.0
+  huber_beta: 0.5
+  log_aux_weight: 0.10
+
+mixture:
+  ridge: 25.0
+  minimum_regime_rows: 40
+  regime_shrinkage: 100.0
+

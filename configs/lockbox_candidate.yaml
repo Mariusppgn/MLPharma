@@ -1,0 +1,44 @@
+run_id: relational_binary_blended_prr_lockbox_v1
+seed: 2026
+
+paths:
+  train: data/raw/train.csv
+  test: data/raw/test.csv
+  sample_submission: data/raw/sample_submission.csv
+  baseline_config: configs/baseline.yaml
+  prr_config: configs/prr_oof.yaml
+  run_dir: artifacts/runs/relational_binary_blended_prr_lockbox_v1
+  output_dir: outputs/lockbox_candidate
+  submission: outputs/submission_relational_binary_blended_prr.csv
+
+lockbox:
+  n_splits: 5
+  fold: 0
+  seed: 4242
+
+inner_validation:
+  n_splits: 5
+  seed: 4343
+
+selection:
+  minimum_total_improvement: 0.0001
+
+branch_c:
+  embedding_dim: 32
+  hidden_dim: 128
+  dropout: 0.15
+  max_epochs: 35
+  patience: 6
+  batch_size: 512
+  learning_rate: 0.002
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  prr_loss_weight: 1.0
+  binary_loss_weight: 1.0
+  positive_weight_max: 5.0
+  target_scale_quantile: 0.95
+  threshold_min: 0.05
+  threshold_max: 0.75
+  threshold_steps: 141
+  platt_regularization: 1.0
+  device: auto

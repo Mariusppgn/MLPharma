@@ -1,0 +1,33 @@
+seed: 2026
+base_config: configs/prr_oof.yaml
+train: data/raw/train.csv
+manifest: artifacts/validation/pair_grouped_folds.csv
+run_dir: artifacts/runs/prr_nested_hpo_smoke
+cpu_threads: 4
+outer_folds: [0]
+inner_splits: 3
+inner_holdout_fold: 0
+use_molecule_priors: true
+baseline: baseline
+base_overrides:
+  features:
+    morgan_components: 4
+    text_components: 4
+    word_max_features: 1000
+    char_max_features: 500
+  training:
+    max_epochs: 4
+    min_epochs: 4
+  architecture:
+    hidden_dims: [32, 16]
+candidates:
+  - name: baseline
+    huber:
+      mse_finetune_epochs: 1
+  - name: regularized
+    architecture:
+      dropout: 0.3
+    training:
+      weight_decay: 0.001
+    huber:
+      mse_finetune_epochs: 1

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DeepPharma — Explorateur de combinaisons</title><link rel="stylesheet" href="/style.css">
+<script src="/app.js" defer></script></head>
+<body><a class="skip" href="#results">Aller aux résultats</a>
+<header><div class="brand">DP<span>DeepPharma · Recherche</span></div><span class="badge">Local • lecture seule</span></header>
+<main><section class="intro"><p class="eyebrow">EXPLORATEUR DE COMBINAISONS</p>
+<h1>Deux molécules. Un profil à explorer.</h1>
+<p>Comparez le contexte pharmacologique et les effets du couple. Les associations décrites ici ne démontrent ni causalité, ni interaction clinique.</p>
+<details><summary>Première visite ? Lire le guide en 30 secondes</summary><ol>
+<li>Sélectionnez A, puis B parmi ses partenaires présents dans le train. Recherchez un identifiant ou un terme du mécanisme ; aucun nom de médicament fiable n’est fourni.</li>
+<li>Choisissez une annotation observée, un PRR brut ou une prédiction OOF. Plusieurs lignes d’un même couple restent sélectionnables, sans moyenne.</li>
+<li>Le contexte A/B décrit leurs <em>autres couples</em>, jamais leur utilisation seule. Le seuil et les filtres s’appliquent au tableau, aux vues et aux exports.</li>
+<li>Sans profils individuels comparables, référence, écart et effets « émergents » restent non calculables.</li></ol></details></section>
+<section class="panel selection" aria-label="Sélection de la combinaison">
+<div class="molecule-input"><label for="molecule-a">Molécule A</label><input id="molecule-a" list="molecules-a" autocomplete="off" placeholder="Identifiant, SMILES ou texte du mécanisme"><span id="selection-a"></span></div>
+<button id="swap" class="swap" title="Inverser A et B" aria-label="Inverser A et B">⇄</button>
+<div class="molecule-input"><label for="molecule-b">Molécule B · partenaires présents dans le train</label><input id="molecule-b" list="molecules-b" autocomplete="off" placeholder="Choisir un partenaire de A"><span id="selection-b"></span></div>
+<datalist id="molecules-a"></datalist><datalist id="molecules-b"></datalist><button id="compare" class="primary">Explorer le couple</button>
+<div class="wide controls"><label>Mesure et provenance<select id="source"><option value="binary">Observé · annotation 0 / 1</option><option value="prr">Observé · PRR brut</option></select></label>
+<label>Ligne source du couple<select id="pair"><option value="">Première ligne disponible</option></select></label>
+<label class="check"><input type="checkbox" id="context" checked>Afficher les autres couples de A/B <small>Fréquences descriptives, pas monothérapies</small></label></div>
+<div id="status" class="wide status" role="status" aria-live="polite">Chargement des données locales…</div></section>
+<section id="structures-section" class="panel" hidden aria-label="Structures topologiques des molécules sélectionnées">
+<div class="section-title"><h2>Structures topologiques 2D</h2><span class="badge">SMILES → RDKit</span></div>
+<p class="muted">Représentation des liaisons, cycles, charges et de la stéréochimie renseignée. Les carbones et hydrogènes usuels sont implicites. Ce dessin n’est pas une conformation 3D et ne représente pas une liaison entre A et B.</p>
+<div class="structures-grid">
+<article class="structure-card"><div class="section-title"><h3 id="structure-title-a">Molécule A</h3><div><button id="structure-enlarge-a">Agrandir A</button> <button id="structure-save-a">SVG de A</button></div></div>
+<div class="structure-image"><img id="structure-img-a" alt="Structure topologique 2D de la molécule A" width="640" height="400"></div><p id="structure-meta-a" class="muted"></p></article>
+<article class="structure-card"><div class="section-title"><h3 id="structure-title-b">Molécule B</h3><div><button id="structure-enlarge-b">Agrandir B</button> <button id="structure-save-b">SVG de B</button></div></div>
+<div class="structure-image"><img id="structure-img-b" alt="Structure topologique 2D de la molécule B" width="640" height="400"></div><p id="structure-meta-b" class="muted"></p></article>
+</div></section>
+<dialog id="structure-dialog" aria-labelledby="structure-dialog-title"><div class="section-title"><h2 id="structure-dialog-title">Structure 2D</h2><button id="structure-close">Fermer</button></div>
+<label class="structure-zoom">Zoom<input id="structure-zoom" type="range" min="100" max="300" step="25" value="100"><output id="structure-zoom-value">100 %</output></label>
+<div id="structure-viewport" class="structure-viewport"><img id="structure-dialog-img" alt="Vue agrandie de la structure topologique"></div></dialog>
+<section class="panel" id="pharma-section"><div class="section-title"><div><p class="eyebrow">CONTEXTE PHARMACOLOGIQUE</p><h2>Ce que les textes permettent de lire</h2></div><button id="pharma-toggle" aria-expanded="false">Afficher les fiches</button></div>
+<p id="cyp-note" class="muted"></p><div id="pharma" class="pharma-grid" hidden></div></section>
+<section class="panel" aria-label="Filtres"><div class="section-title"><h2>Définir la lecture</h2><button id="reset">Réinitialiser les filtres</button></div>
+<div class="filters"><label>Rechercher un effet<input id="search" type="search" placeholder="Céphalée, Headache…"></label>
+<label>Catégorie descriptive<select id="category"><option value="">Toutes</option><option value="shared">Partagés (individuels)</option><option value="a_specific">A spécifique (individuel)</option><option value="b_specific">B spécifique (individuel)</option><option value="strengthened">Renforcés</option><option value="attenuated">Atténués</option><option value="emerging">Émergents</option><option value="context_shared">Communs aux contextes</option><option value="context_a">Détectés dans le contexte A seulement</option><option value="context_b">Détectés dans le contexte B seulement</option></select></label>
+<label>Minimum A+B<input id="minimum" type="number" min="0" step="any" placeholder="Sans limite"></label>
+<label>Maximum A+B<input id="maximum" type="number" min="0" step="any" placeholder="Sans limite"></label>
+<label>Écart<select id="delta-sign"><option value="">Tous / non calculables</option><option value="positive">Positif calculable</option><option value="negative">Négatif calculable</option></select></label>
+<label>Tri<select id="sort"><option value="name">Nom d’effet</option><option value="value">Valeur A+B décroissante</option><option value="delta">Écart absolu décroissant</option></select></label>
+<label>Seuil de détection<input id="threshold" type="number" min="0" step="any" value="0.5"></label>
+<label>Marge descriptive<input id="margin" type="number" min="0" step="any" value="0.05"></label>
+<label>Support minimum par profil<input id="min-support" type="number" min="0" step="1" value="0"></label>
+<label>SOC MedDRA<select id="soc" disabled><option value="">Non fourni</option></select></label>
+<label>PT / identifiant<select id="pt" disabled><option value="">Non fourni</option></select></label>
+<label>Largeur IC max.<input id="ci-width" type="number" min="0" step="any" disabled placeholder="Non fourni"></label>
+<label>n clinique minimum A+B<input id="minimum-n" type="number" min="0" step="1" disabled placeholder="Non fourni"></label>
+<label>Classe pharmacologique<select disabled><option>Non fournie — voir les textes</option></select></label>
+</div><label class="check"><input id="independence" type="checkbox">Autoriser la référence d’indépendance <small>Seulement si trois probabilités documentées de même population, période et signification sont disponibles</small></label>
+<p id="threshold-note" class="muted"></p></section>
+<section id="results" aria-label="Résultats"><div id="summary" class="summary"></div>
+<section class="panel"><div class="section-title"><div><p class="eyebrow">PROFILS GLOBAUX</p><h2>A → Couple A+B ← B</h2></div><span id="population" class="badge"></span></div>
+<p class="muted">Même liste filtrée dans toutes les vues. Aucun regroupement organique n’est inventé. Sélectionnez un effet pour le retrouver partout.</p><div id="profiles" class="profiles"></div></section>
+<section class="panel"><div class="section-title"><h2>Explorer les effets</h2><div class="export"><button id="csv">CSV + provenance</button><button id="json">JSON complet</button><button id="svg">SVG</button><button id="png">PNG</button></div></div>
+<div class="view-tabs" role="group" aria-label="Type de graphique"><button data-view="bars" aria-pressed="true">Barres comparatives</button><button data-view="heatmap" aria-pressed="false">Heatmap</button><button data-view="delta" aria-pressed="false">Écarts à la référence</button><button data-view="scatter" aria-pressed="false">Référence vs couple</button></div>
+<p id="chart-note" class="muted"></p><div id="chart" class="chart" aria-label="Graphique des effets"></div></section>
+<section class="panel"><div class="section-title"><h2>Matrice comparative</h2><span class="muted">NC = Non calculable, jamais zéro</span></div>
+<div class="table-scroll"><table><thead><tr><th>Effet</th><th id="a-heading">A</th><th id="b-heading">B</th><th>A+B</th><th>Référence</th><th>Écart (pp)</th><th>Catégories</th><th>Support / provenance</th></tr></thead><tbody id="table"></tbody></table></div></section>
+</section><section class="panel limitations"><h2>Avant de conclure</h2><ul id="limitations"></ul>
+<details><summary>Traçabilité des fichiers et méthode</summary><pre id="audit"></pre></details></section>
+<footer>DeepPharma · Analyse exploratoire de recherche. Ne constitue pas un outil de décision clinique ou de prescription. Données conservées sur cette machine.</footer></main></body></html>

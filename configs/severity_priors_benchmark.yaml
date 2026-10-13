@@ -1,0 +1,31 @@
+run_id: severity_priors_oof_v1
+seed: 2026
+
+paths:
+  train: data/raw/train.csv
+  manifest: artifacts/validation/pair_grouped_folds.csv
+  audit: artifacts/validation/pair_grouped_audit.json
+  incumbent_oof: artifacts/runs/multimodal_lgbm_extratrees_v1/oof_predictions.csv
+  binary_oof: outputs/rupture_benchmark/oof_predictions_rupture_adaptive_stack.csv
+  old_prr_oof: outputs/prr_rupture_v2/oof_predictions_incumbent_blend.csv
+  new_prr_oof: outputs/prr_rupture_v2/oof_predictions_adaptive_moe.csv
+  feature_cache_config: configs/prr_oof.yaml
+  feature_cache_dir: artifacts/runs/prr_oof_5fold_v1/feature_cache
+  run_dir: artifacts/runs/severity_priors_oof_v1
+  output_dir: outputs/severity_priors
+  test: data/raw/test.csv
+  sample_submission: data/raw/sample_submission.csv
+  incumbent_submission: outputs/submission_relational_binary_blended_prr.csv
+  candidate_submission: outputs/submission_severity_priors_v1.csv
+
+selection:
+  minimum_macro_f1_gain: 0.005
+
+model:
+  prior_smoothing: 20.0
+  n_estimators: 250
+  learning_rate: 0.04
+  num_leaves: 31
+  min_child_samples: 20
+  reg_lambda: 2.0
+  n_jobs: 8

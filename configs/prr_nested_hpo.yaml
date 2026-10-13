@@ -1,0 +1,33 @@
+seed: 2026
+base_config: configs/prr_oof.yaml
+train: data/raw/train.csv
+manifest: artifacts/validation/pair_grouped_folds.csv
+run_dir: artifacts/runs/prr_nested_hpo_v1
+cpu_threads: 4
+outer_folds: [0, 1, 2, 3, 4]
+inner_splits: 3
+inner_holdout_fold: 0
+use_molecule_priors: true
+baseline: baseline
+candidates:
+  - name: baseline
+  - name: regularized
+    architecture:
+      dropout: 0.3
+    training:
+      weight_decay: 0.001
+  - name: compact
+    architecture:
+      hidden_dims: [128, 64]
+      dropout: 0.2
+    training:
+      learning_rate: 0.0005
+      huber_beta: 1.0
+  - name: longer_mse
+    training:
+      max_epochs: 40
+      min_epochs: 30
+    huber:
+      mse_finetune_epochs: 8
+      regression_head_only: false
+      finetune_learning_rate: 0.00005

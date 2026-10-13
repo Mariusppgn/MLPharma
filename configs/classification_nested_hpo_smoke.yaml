@@ -1,0 +1,49 @@
+run_id: classification_nested_hpo_smoke
+seed: 2026
+inner_splits: 3
+outer_folds: [0]
+torch_threads: 4
+prior_smoothing: 20.0
+baseline_gate_threshold: 0.5
+paths:
+  train: work/classification_nested_hpo_smoke/train.csv
+  manifest: work/classification_nested_hpo_smoke/manifest.csv
+  feature_config: configs/classification_nested_hpo_smoke_features.yaml
+  run_dir: artifacts/runs/classification_nested_hpo_smoke_stratified
+severity_baseline:
+  n_estimators: 8
+  learning_rate: 0.04
+  num_leaves: 15
+  min_child_samples: 20
+  reg_lambda: 2.0
+  class_weight: balanced
+  n_jobs: 4
+severity_candidates:
+  - {}
+  - {reg_lambda: 4.0}
+activity_model:
+  n_estimators: 8
+  learning_rate: 0.04
+  num_leaves: 15
+  min_child_samples: 20
+  reg_lambda: 2.0
+  n_jobs: 4
+binary_baseline:
+  embedding_dim: 8
+  hidden_dim: 16
+  dropout: 0.15
+  max_epochs: 2
+  patience: 2
+  batch_size: 512
+  learning_rate: 0.002
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  prr_loss_weight: 1.0
+  binary_loss_weight: 1.0
+  positive_weight_max: 5.0
+  target_scale_quantile: 0.95
+binary_candidates:
+  - {}
+  - {dropout: 0.3}
+binary_thresholds: [0.3, 0.5, 0.7]
+gate_thresholds: [0.0, 0.5]

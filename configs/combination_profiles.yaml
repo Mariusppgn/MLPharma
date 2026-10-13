@@ -1,0 +1,7 @@
+# Read-only research explorer. Paths relative to the repository root.
+train: data/raw/train.csv
+oof_dir: outputs/graph/effect_graph_v1
+manifest: artifacts/validation/pair_grouped_folds.csv
+profiles: null
+audit: outputs/combination_profiles/source_audit.json
+port: 8766

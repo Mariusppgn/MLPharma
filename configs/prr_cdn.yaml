@@ -1,0 +1,15 @@
+train_path: data/raw/train.csv
+fold_manifest: artifacts/validation/pair_grouped_folds.csv
+output_dir: artifacts/runs/prr_cdn_v1
+seed: 2026
+inner_folds: 3
+jobs: 6
+feature_bins: 64
+trees: 120
+leaves: 15
+learning_rate: 0.05
+min_child_samples: 40
+reg_lambda: 10.0
+damping: 0.35
+iterations: 20
+tolerance: 0.0001

@@ -1,0 +1,53 @@
+run_id: prr_pytorch_comparison_v1
+seed: 2026
+
+validation:
+  fold: 0
+  manifest: artifacts/validation/pair_grouped_folds.csv
+  audit: artifacts/validation/pair_grouped_audit.json
+
+features:
+  morgan_components: 64
+  text_components: 64
+  word_max_features: 20000
+  char_max_features: 8000
+  min_df: 3
+  include_warning_toxicity: true
+
+architecture:
+  hidden_dims: [256, 128]
+  dropout: 0.15
+  use_batch_norm: true
+
+training:
+  max_epochs: 35
+  min_epochs: 27
+  patience: 7
+  batch_size: 256
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  scheduler_factor: 0.5
+  scheduler_patience: 3
+  scheduler_min_lr: 0.00001
+  num_workers: 0
+  device: auto
+  target_scale_quantile: 0.95
+  huber_beta: 0.5
+  hurdle_bce_weight: 1.0
+  hurdle_regression_weight: 1.0
+
+loss_schedules:
+  progressive:
+    log_only_epochs: 7
+    transition_epochs: 10
+  huber:
+    mse_finetune_epochs: 8
+
+paths:
+  train: data/raw/train.csv
+  test: data/raw/test.csv
+  run_dir: artifacts/runs/prr_pytorch_comparison_v1
+  output_dir: outputs/prr_pytorch
+
+predict_test_after_selection: true

@@ -1,0 +1,31 @@
+run_id: global_gnn_oof_v1
+seed: 2026
+
+paths:
+  train: data/raw/train.csv
+  manifest: artifacts/validation/pair_grouped_folds.csv
+  audit: artifacts/validation/pair_grouped_audit.json
+  run_dir: artifacts/runs/global_gnn_oof_v1
+  output_oof: outputs/global_gnn/oof_predictions.csv
+
+model:
+  device: auto
+  max_atoms: 256
+  hidden_dim: 64
+  gnn_layers: 3
+  text_hash_dim: 64
+  dropout: 0.15
+  identity_dropout: 0.40
+  identity_limit: 0.50
+
+training:
+  max_folds: 5
+  max_epochs: 35
+  min_epochs: 8
+  patience: 7
+  learning_rate: 0.002
+  weight_decay: 0.0002
+  gradient_clip_norm: 1.0
+  severity_weight: 1.0
+  binary_weight: 1.0
+  prr_weight: 1.0

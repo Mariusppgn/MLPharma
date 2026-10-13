@@ -1,0 +1,73 @@
+run_id: four_branch_benchmark_quick_v1
+seed: 2026
+
+paths:
+  train: data/raw/train.csv
+  manifest: artifacts/validation/pair_grouped_folds.csv
+  audit: artifacts/validation/pair_grouped_audit.json
+  baseline_oof: artifacts/runs/multimodal_lgbm_extratrees_v1/oof_predictions.csv
+  feature_cache_config: configs/prr_oof.yaml
+  feature_cache_dir: artifacts/runs/prr_oof_5fold_v1/feature_cache
+  run_dir: artifacts/runs/four_branch_benchmark_quick_v1
+  output_dir: outputs/four_branch_benchmark_quick
+
+branch_a:
+  n_estimators: 120
+  max_depth: 16
+  min_samples_leaf: 3
+  max_features: 0.75
+  max_samples: 0.85
+  threshold_min: 0.05
+  threshold_max: 0.75
+  threshold_steps: 71
+  platt_regularization: 1.0
+  n_jobs: 8
+
+branch_b:
+  backend: lightgbm
+  max_estimators: 180
+  early_stopping_rounds: 18
+  learning_rate: 0.05
+  num_leaves: 31
+  max_depth: -1
+  min_child_samples: 20
+  subsample: 0.85
+  colsample_bytree: 0.85
+  reg_lambda: 2.0
+  threshold_min: 0.05
+  threshold_max: 0.75
+  threshold_steps: 71
+  platt_regularization: 1.0
+  target_n_jobs: 8
+  model_n_jobs: 1
+
+branch_c:
+  embedding_dim: 24
+  hidden_dim: 96
+  dropout: 0.15
+  max_epochs: 18
+  patience: 4
+  batch_size: 512
+  learning_rate: 0.002
+  weight_decay: 0.0001
+  gradient_clip_norm: 1.0
+  prr_loss_weight: 1.0
+  binary_loss_weight: 1.0
+  positive_weight_max: 5.0
+  target_scale_quantile: 0.95
+  threshold_min: 0.05
+  threshold_max: 0.75
+  threshold_steps: 71
+  platt_regularization: 1.0
+  device: auto
+
+branch_d:
+  binary_mode: hard_vote
+  binary_weights:
+    branch_a_calibrated: 0.40
+    branch_b_targetwise_lgbm: 0.40
+    branch_c_relational: 0.20
+  prr_weights:
+    branch_a_calibrated: 0.50
+    branch_b_targetwise_lgbm: 0.35
+    branch_c_relational: 0.15

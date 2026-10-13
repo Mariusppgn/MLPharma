@@ -1,0 +1,25 @@
+run_id: multimodal_lgbm_extratrees_v1
+seed: 2026
+
+features:
+  morgan_components: 64
+  text_components: 64
+  word_max_features: 20000
+  char_max_features: 8000
+  min_df: 3
+  include_warning_toxicity: true
+
+models:
+  severity_estimators: 220
+  binary_estimators: 160
+  prr_estimators: 160
+  learning_rate: 0.04
+  num_leaves: 31
+  max_depth: -1
+  min_child_samples: 20
+  forest_max_depth: 18
+  forest_min_samples_leaf: 3
+  forest_max_features: 0.75
+
+runtime:
+  n_jobs: 8

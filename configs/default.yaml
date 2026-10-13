@@ -1,0 +1,33 @@
+competition:
+  slug: deep-pharma-multimodal-intelligence-challenge-data-hack-3-0
+
+paths:
+  raw_data: data/raw
+  reports: reports
+  submissions: submissions
+
+reproducibility:
+  random_seed: 2026
+
+metric:
+  severity_weight: 0.4
+  side_effect_weight: 0.3
+  prr_weight: 0.3
+  prr_mask_threshold: 0.0
+
+validation:
+  primary_strategy: stratified_canonical_pair_grouped_v2
+  n_splits: 5
+  seed: 2026
+  stratification: severity_and_any_side_effect
+  strict_drug_holdout:
+    enabled: true
+    fraction: 0.25
+    seeds: [2026, 2027, 2028]
+    purge_boundary_pairs: true
+
+submission_gate:
+  automatic_submission: false
+  require_same_validation_fingerprint: true
+  require_passed_leakage_audit: true
+  min_total_score_improvement: 0.0001

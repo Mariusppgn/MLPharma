@@ -1,0 +1,48 @@
+run_id: prr_tail_dependency_lowrank_oof_v1
+seed: 2026
+
+paths:
+  train: data/raw/train.csv
+  manifest: artifacts/validation/pair_grouped_folds.csv
+  audit: artifacts/validation/pair_grouped_audit.json
+  incumbent_oof: outputs/prr_oof/oof_predictions_blend_prior_base.csv
+  feature_cache_config: configs/prr_oof.yaml
+  feature_cache_dir: artifacts/runs/prr_oof_5fold_v1/feature_cache
+  run_dir: artifacts/runs/prr_tail_dependency_lowrank_oof_v1
+  output_dir: outputs/prr_tail_dependency_lowrank
+  test: data/raw/test.csv
+  sample_submission: data/raw/sample_submission.csv
+  incumbent_submission: outputs/submission_severity_activity_v1.csv
+  candidate_submission: outputs/submission_tail_dependency_lowrank_v1.csv
+
+graph:
+  neighbors: 6
+  minimum_joint: 25
+  joint_shrinkage: 75.0
+
+coeffect:
+  enabled: true
+  rank: 12
+  ridge: 100.0
+
+tail:
+  top_k_targets: 10
+  threshold_quantile: 0.90
+  minimum_positive: 120
+  minimum_tail: 35
+  n_estimators: 180
+  tail_estimators: 120
+  learning_rate: 0.04
+  num_leaves: 15
+  tail_num_leaves: 7
+  min_child_samples: 18
+  reg_lambda: 5.0
+  tail_reg_lambda: 10.0
+  tail_shrinkage: 80.0
+  target_n_jobs: 6
+
+selection:
+  fixed_blend_weight: 0.20
+  minimum_sprr_gain: 0.001
+  tail_threshold: 20.0
+  require_every_fold_improved: true

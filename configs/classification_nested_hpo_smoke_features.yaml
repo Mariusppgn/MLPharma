@@ -1,0 +1,7 @@
+features:
+  morgan_components: 8
+  text_components: 8
+  word_max_features: 500
+  char_max_features: 200
+  min_df: 3
+  include_warning_toxicity: true

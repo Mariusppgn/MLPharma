@@ -1,0 +1,36 @@
+run_id: row_activity_oof_v1
+seed: 2026
+
+paths:
+  train: data/raw/train.csv
+  manifest: artifacts/validation/pair_grouped_folds.csv
+  audit: artifacts/validation/pair_grouped_audit.json
+  binary_oof: outputs/rupture_benchmark/oof_predictions_rupture_adaptive_stack.csv
+  severity_oof: outputs/severity_priors/oof_severity_priors_balanced.csv
+  old_prr_oof: outputs/prr_rupture_v2/oof_predictions_incumbent_blend.csv
+  new_prr_oof: outputs/prr_rupture_v2/oof_predictions_adaptive_moe.csv
+  feature_cache_config: configs/prr_oof.yaml
+  feature_cache_dir: artifacts/runs/prr_oof_5fold_v1/feature_cache
+  run_dir: artifacts/runs/row_activity_oof_v1
+  output_dir: outputs/row_activity
+  incumbent_binary_oof: outputs/four_branch_benchmark/oof_predictions_branch_c_relational.csv
+  test: data/raw/test.csv
+  sample_submission: data/raw/sample_submission.csv
+  severity_candidate_submission: outputs/submission_severity_priors_v1.csv
+  candidate_submission: outputs/submission_severity_activity_v1.csv
+
+selection:
+  activity_threshold: 0.5
+  minimum_binary_f1_gain: 0.005
+
+model:
+  prior_smoothing: 20.0
+  n_estimators: 250
+  learning_rate: 0.04
+  num_leaves: 31
+  min_child_samples: 20
+  reg_lambda: 2.0
+  n_jobs: 8
+
+evaluation:
+  thresholds: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60]
